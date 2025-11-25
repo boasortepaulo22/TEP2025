@@ -1,0 +1,3 @@
+ssh ubuntu@163.176.174.111 -i "C:\Users\ph\Documents\TEP2025\AULA7\ssh-key-2025-10-23.key"
+icacls C:\Users\ph\Documents\TEP2025\AULA7\id_rsa.key /inheritance:r
+icacls C:\Users\ph\Documents\TEP2025\AULA7\id_rsa.key /grant:r "%username%:R"

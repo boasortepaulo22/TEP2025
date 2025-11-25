@@ -1,15 +1,15 @@
 version: "3.7"
 
 services:
-  evolution_v2:  
-    image: atendai/evolution-api:v2.2.3 ## Versão da Evolution API
+  evolution_v2:
+    image: evoapicloud/evolution-api:homolog ## Versão da Evolution API
     volumes:
       - evolution_instancesv2:/evolution/instances
     networks:
       - network_public
     environment:
     ## Url da Evolution API
-    - SERVER_URL=https://api.bfs.autom.my
+    - SERVER_URL=https://api.paulo.musicofmylifeapp.com
     ## Dados de Autenticação
     - AUTHENTICATION_TYPE=apikey
     - AUTHENTICATION_API_KEY=1b13b2f0f532b81a874c825c7d2e06f7 ## GLOBAL API KEY
@@ -17,10 +17,10 @@ services:
     ## Configurações
     - LANGUAGE=pt-BR
     - CONFIG_SESSION_PHONE_CLIENT=WhatsAPI ## Nome que aparece no celular
-    - CONFIG_SESSION_PHONE_NAME=chrome    
+    - CONFIG_SESSION_PHONE_NAME=chrome
     ## Definir versão do Whatsapp Web
     ## pegue a versão em: https://web.whatsapp.com/check-update?version=0&platform=web
-    - CONFIG_SESSION_PHONE_VERSION=2.3000.1022128419
+    - CONFIG_SESSION_PHONE_VERSION=2.3000.1028831765
     ## Configurações do Whatsapp Business Cloud (Api Oficial)
     - WA_BUSINESS_TOKEN_WEBHOOK=evolution
     - WA_BUSINESS_URL=https://graph.facebook.com
@@ -50,7 +50,7 @@ services:
     - S3_BUCKET=evolution
     - S3_PORT=443
     - S3_ENDPOINT=
-    - S3_USE_SSL=true    
+    - S3_USE_SSL=true
     ## Ativar o Cache Redis
     - CACHE_REDIS_ENABLED=true
     - CACHE_REDIS_URI=redis://redis:6379/2
@@ -130,7 +130,12 @@ services:
     - WEBHOOK_EVENTS_TYPEBOT_CHANGE_STATUS=false
     - WEBHOOK_EVENTS_ERRORS=false
     - WEBHOOK_EVENTS_ERRORS_WEBHOOK=
-
+      ## Configuração do Provider
+    - PROVIDER_ENABLED=false
+    - PROVIDER_HOST=127.0.0.1
+    - PROVIDER_PORT=5656
+    - PROVIDER_PREFIX=evolution
+    
     deploy:
       mode: replicated
       replicas: 1
@@ -139,7 +144,7 @@ services:
         - node.role == manager
       labels:
       - traefik.enable=1
-      - traefik.http.routers.evolution_v2.rule=Host(`api.bfs.autom.my`) ## Url da aplicação
+      - traefik.http.routers.evolution_v2.rule=Host(`api.paulo.musicofmylifeapp.com`) ## Url da aplicação
       - traefik.http.routers.evolution_v2.entrypoints=websecure
       - traefik.http.routers.evolution_v2.priority=1
       - traefik.http.routers.evolution_v2.tls.certresolver=letsencryptresolver

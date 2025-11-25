@@ -16,7 +16,7 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.docker.network=network_public"
-        - "traefik.http.routers.portainer.rule=Host(`pbenevid.server.bentektecnologia.com.br`)"
+        - "traefik.http.routers.portainer.rule=Host(`p.paulo.musicofmylifeapp.com`)"
         - "traefik.http.routers.portainer.entrypoints=websecure"
         - "traefik.http.routers.portainer.priority=1"
         - "traefik.http.routers.portainer.tls.certresolver=letsencryptresolver"

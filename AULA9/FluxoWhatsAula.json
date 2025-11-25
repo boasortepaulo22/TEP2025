@@ -1,0 +1,453 @@
+{
+  "name": "FluxoWhatsAula",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tep",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -704,
+        -224
+      ],
+      "id": "df0c6ba2-d416-4c57-b9e9-4c19146fce8e",
+      "name": "Webhook",
+      "webhookId": "672bd5ff-86c5-4538-9727-ed6bacde11fc"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "631ac5c7-d9a1-43ef-a42a-d42edef0176e",
+              "name": "evento",
+              "value": "={{ $json.body.event }}",
+              "type": "string"
+            },
+            {
+              "id": "fd959d2c-665c-4317-8def-f25259a269f8",
+              "name": "instancia",
+              "value": "={{ $json.body.instance }}",
+              "type": "string"
+            },
+            {
+              "id": "546ad614-4e7e-49af-a54e-6e517960ba04",
+              "name": "contato",
+              "value": "={{ $json.body.data.key.remoteJid }}",
+              "type": "string"
+            },
+            {
+              "id": "06bd5505-7e91-4de5-859b-051e17bd3c05",
+              "name": "nome_contato",
+              "value": "={{ $json.body.data.pushName }}",
+              "type": "string"
+            },
+            {
+              "id": "79475218-ac60-4c40-bf09-9b0a9878a97b",
+              "name": "mensagem",
+              "value": "={{ $json.body.data.message.conversation }}",
+              "type": "string"
+            },
+            {
+              "id": "e3217496-af91-47ac-a3f1-6ff67403169b",
+              "name": "TipoMensagem",
+              "value": "={{ $json.body.data.messageType }}",
+              "type": "string"
+            },
+            {
+              "id": "343a43be-e4a2-4b56-ac03-f718b81dc34d",
+              "name": "fromMe",
+              "value": "={{ $json.body.data.key.fromMe }}",
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -448,
+        -96
+      ],
+      "id": "114c958b-0d0f-4019-95aa-6dbeef0ce645",
+      "name": "ENTRADA"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d0f5e4ba-1e1f-4d85-a062-0d489dd7e729",
+              "leftValue": "={{ $json.fromMe }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -240,
+        -176
+      ],
+      "id": "d5545e86-2c98-42f6-bb44-e04c87e81fc5",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.TipoMensagem }}",
+                    "rightValue": "conversation",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "87259368-e016-4879-ba67-3b4189c397b8"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -16,
+        -80
+      ],
+      "id": "594345b9-6d80-4b9e-9617-068250a696a4",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.mensagem }}",
+        "options": {
+          "systemMessage": "Você é JAURI, assistente pessoal do prof. Benevid.\n\nResponda cordialmente todas as mensagem sem em forma de piada."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        256,
+        -128
+      ],
+      "id": "1bcc7719-3a07-4316-b977-ed9dc8bb9f2e",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        160,
+        80
+      ],
+      "id": "b08c66a1-53ce-4e9e-8bc6-7884d73eced8",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "H4d6eikrWlSKngyU",
+          "name": "Groq TEAF"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "={{ $('ENTRADA').item.json.instancia }}",
+        "remoteJid": "={{ $('ENTRADA').item.json.contato }}",
+        "messageText": "={{ $json.output }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        608,
+        -128
+      ],
+      "id": "106ce653-b842-42b9-8e21-da2b1d4ab358",
+      "name": "Enviar texto",
+      "credentials": {
+        "evolutionApi": {
+          "id": "7ioN17nNyGYyGFUs",
+          "name": "N8nAutommy"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "auto.bfs.autom.my",
+            "user-agent": "axios/1.12.2",
+            "content-length": "1850",
+            "accept": "application/json, text/plain, */*",
+            "accept-encoding": "gzip, compress, deflate, br",
+            "content-type": "application/json",
+            "x-forwarded-for": "168.75.67.244",
+            "x-forwarded-host": "auto.bfs.autom.my",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "d7376323f37b",
+            "x-real-ip": "168.75.67.244"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "event": "messages.upsert",
+            "instance": "Whatsn8n",
+            "data": {
+              "key": {
+                "remoteJid": "554192582733@s.whatsapp.net",
+                "remoteJidAlt": "263436164440204@lid",
+                "fromMe": false,
+                "id": "3EB0DD8BCCBEA708547AFA",
+                "participant": "",
+                "addressingMode": "pn"
+              },
+              "pushName": "Prof. Benevid Felix",
+              "status": "DELIVERY_ACK",
+              "message": {
+                "messageContextInfo": {
+                  "deviceListMetadata": {
+                    "senderKeyIndexes": [],
+                    "recipientKeyIndexes": [],
+                    "senderKeyHash": {
+                      "0": 94,
+                      "1": 64,
+                      "2": 49,
+                      "3": 122,
+                      "4": 212,
+                      "5": 120,
+                      "6": 245,
+                      "7": 189,
+                      "8": 87,
+                      "9": 159
+                    },
+                    "senderTimestamp": {
+                      "low": 1760965159,
+                      "high": 0,
+                      "unsigned": true
+                    },
+                    "senderAccountType": 0,
+                    "receiverAccountType": 0,
+                    "recipientKeyHash": {
+                      "0": 152,
+                      "1": 129,
+                      "2": 0,
+                      "3": 105,
+                      "4": 23,
+                      "5": 116,
+                      "6": 216,
+                      "7": 176,
+                      "8": 233,
+                      "9": 126
+                    },
+                    "recipientTimestamp": {
+                      "low": 1760733815,
+                      "high": 0,
+                      "unsigned": true
+                    }
+                  },
+                  "deviceListMetadataVersion": 2,
+                  "messageSecret": {
+                    "0": 254,
+                    "1": 56,
+                    "2": 135,
+                    "3": 77,
+                    "4": 234,
+                    "5": 163,
+                    "6": 81,
+                    "7": 237,
+                    "8": 68,
+                    "9": 252,
+                    "10": 59,
+                    "11": 28,
+                    "12": 26,
+                    "13": 159,
+                    "14": 106,
+                    "15": 47,
+                    "16": 110,
+                    "17": 7,
+                    "18": 64,
+                    "19": 161,
+                    "20": 168,
+                    "21": 95,
+                    "22": 146,
+                    "23": 132,
+                    "24": 112,
+                    "25": 182,
+                    "26": 123,
+                    "27": 45,
+                    "28": 219,
+                    "29": 24,
+                    "30": 205,
+                    "31": 57
+                  },
+                  "limitSharingV2": {
+                    "sharingLimited": false,
+                    "trigger": 0,
+                    "limitSharingSettingTimestamp": {
+                      "low": 0,
+                      "high": 0,
+                      "unsigned": false
+                    },
+                    "initiatedByMe": false
+                  }
+                },
+                "conversation": "ola"
+              },
+              "contextInfo": {
+                "mentionedJid": [],
+                "groupMentions": [],
+                "ephemeralSettingTimestamp": {
+                  "low": 1760919370,
+                  "high": 0,
+                  "unsigned": false
+                },
+                "disappearingMode": {
+                  "initiator": 0,
+                  "trigger": 1,
+                  "initiatedByMe": false
+                }
+              },
+              "messageType": "conversation",
+              "messageTimestamp": 1761093273,
+              "instanceId": "f2dc35f2-5c86-4b4f-880b-d7a54274c1bb",
+              "source": "web",
+              "chatwootMessageId": 73432,
+              "chatwootInboxId": 22,
+              "chatwootConversationId": 3
+            },
+            "destination": "https://auto.bfs.autom.my/webhook-test/tep",
+            "date_time": "2025-10-21T21:34:33.870Z",
+            "sender": "556696694769@s.whatsapp.net",
+            "server_url": "https://api.bfs.autom.my",
+            "apikey": "4D29FDAF4F98-48FB-BF1C-A8C729C1CAC7"
+          },
+          "webhookUrl": "https://webhook.bfs.autom.my/webhook-test/tep",
+          "executionMode": "test"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "ENTRADA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ENTRADA": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Enviar texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5a8eefa7-8ed9-4aa0-9553-41989c60c8dd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3d2241a931a41caca7ba8f38cf7f8543bef4654d8031ea7e7f027085ba9a77a6"
+  },
+  "id": "ZlL92LHgRGxYuHSj",
+  "tags": []
+}

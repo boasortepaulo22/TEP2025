@@ -23,15 +23,15 @@ n8n_mcp_api:
       # usa a mesma chave criada no editor
       - N8N_ENCRYPTION_KEY=50e38b36-effe-4b7d-b9e2-9ee1a3782781
       # Configura o Host do Editor do N8N
-      - N8N_HOST=auto.bfs.autom.my
+      - N8N_HOST=auto.paulo.musicofmylifeapp.com
       # Configura o Endereço competo do Editor
-      - N8N_EDITOR_BASE_URL=https://auto.bfs.autom.my/
+      - N8N_EDITOR_BASE_URL=https://auto.paulo.musicofmylifeapp.com/
       # Força o uso de SSL
       - N8N_PROTOCOL=https
       # Configura o ambiente de execução
       - NODE_ENV=production
       # Configura o Endereço do Webhook
-      - WEBHOOK_URL=https://webhook.bfs.autom.my/
+      - WEBHOOK_URL=https://webhook.paulo.musicofmylifeapp.com/
       # Configura o modo de execução para fila
       - EXECUTIONS_MODE=queue
       # Community Nodes
@@ -82,7 +82,7 @@ n8n_mcp_api:
         # Configura o Roteamento do Traefik para o MCP
         ######################################################
         # Define o endereço do Webhook do N8N para receber somente o prefixo /mcp
-        - traefik.http.routers.n8n_mcp_api.rule=(Host(`webhooks.bfs.autom.my`) && PathPrefix(`/mcp`))
+        - traefik.http.routers.n8n_mcp_api.rule=(Host(`webhooks.paulo.musicofmylifeapp.com`) && PathPrefix(`/mcp`))
         # redireciona o endereço para HTTPS
         - traefik.http.routers.n8n_mcp_api.entrypoints=websecure
         # Define o certificado SSL
