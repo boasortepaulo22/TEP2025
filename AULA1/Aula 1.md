@@ -1,4 +1,4 @@
-# Aula 1 - Introdução ao desenvolvimento de software com LLMs (15/08/2024)
+# Aula 1 - Introdução ao desenvolvimento de software com LLMs (26/08/2025)
 
 Na **primeira aula**, tivemos uma apresentação da disciplina e  introdução ao uso de *Large Language Models* (LLMs) no desenvolvimento de software, com foco em como essa tecnologia pode auxiliar na automação de tarefas e geração de conteúdos. Os principais tópicos abordados foram:
 
